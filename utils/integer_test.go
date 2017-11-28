@@ -3,8 +3,6 @@ package utils
 import (
 	"testing"
 	"fmt"
-	"github.com/kniren/gota/dataframe"
-	"github.com/kniren/gota/series"
 )
 
 func TestGenerateIndex(t *testing.T) {

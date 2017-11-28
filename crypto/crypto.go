@@ -1,13 +1,14 @@
 package crypto
 
 import (
+	"io"
 	"fmt"
+	"bytes"
 	"crypto/md5"
+	"encoding/binary"
 	"github.com/qd-um/golang-crypto/blowfish"
 	"github.com/klauspost/compress/zlib"
-	"encoding/binary"
-	"bytes"
-	"io"
+	gbytes "gcom/bytes"
 )
 
 /**
@@ -54,7 +55,7 @@ func Blowfish(content []byte) []byte {
 		var tmpBigInt [2]uint32
 		delta := totalLength % 8
 		//deltaContent := make([]byte, 8)
-		deltaContent := BytesCombine(content[offset:offset+delta], make([]byte, 8-delta))
+		deltaContent := gbytes.BytesCombine(content[offset:offset+delta], make([]byte, 8-delta))
 
 		cipher.Encrypt(dataEncrypted, deltaContent)
 		tmpBuffer := bytes.NewBuffer(dataEncrypted)

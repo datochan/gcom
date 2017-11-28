@@ -1,0 +1,22 @@
+package: gcom
+import:
+- package: github.com/Tang-RoseChild/mahonia
+- package: github.com/klauspost/compress
+  version: ~1.2.1
+  subpackages:
+  - gzip
+  - zlib
+- package: github.com/kniren/gota
+  version: ~0.9.0
+  subpackages:
+  - dataframe
+  - series
+- package: github.com/qd-um/golang-crypto
+  version: ~0.0.1
+  subpackages:
+  - blowfish
+testImport:
+- package: github.com/smartystreets/goconvey
+  version: ~1.6.3
+  subpackages:
+  - convey
