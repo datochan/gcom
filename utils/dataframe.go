@@ -6,8 +6,7 @@ import (
 	"github.com/kniren/gota/dataframe"
 	"github.com/klauspost/compress/gzip"
 
-	"datoquant/comm/utils"
-	"datoquant/comm/utils/logger"
+	"gcom/logger"
 )
 
 /**
@@ -19,7 +18,7 @@ const (
 
 // 为df增加idx列
 func ReIndex(df *dataframe.DataFrame) dataframe.DataFrame {
-	idxs := utils.GenerateIndex(0, 1, df.Nrow())
+	idxs := GenerateIndex(0, 1, df.Nrow())
 
 	result := df.Mutate(series.New(idxs, series.Int, IndexColName))
 
@@ -27,7 +26,7 @@ func ReIndex(df *dataframe.DataFrame) dataframe.DataFrame {
 }
 
 /**
- * 读取股票数据
+ * 从CSV中加载df数据
  */
 func ReadCSV(filename string, options ...dataframe.LoadOption) dataframe.DataFrame {
 	inFile, err := os.OpenFile(filename, os.O_RDONLY | os.O_RDWR, 0666)
