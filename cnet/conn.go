@@ -148,14 +148,6 @@ func (s *Session) GetSendChanSize() int {
 	return cap(s.sendChan)
 }
 
-// 开始会话，循环监听发送与接收
-func (s *Session) Start() {
-	if atomic.CompareAndSwapInt32(&s.closed, -1, 0) {
-		go s.sendLoop()
-		go s.recvLoop()
-	}
-}
-
 func (s *Session) recvLoop() {
 	defer s.Close()
 
@@ -236,6 +228,14 @@ func NewAsyncSession(network, address string, protocol IPacketProtocol, handler 
 		},
 	}, nil
 
+}
+
+// 开始会话，循环监听发送与接收
+func (s *AsyncSession) Start() {
+	if atomic.CompareAndSwapInt32(&s.closed, -1, 0) {
+		go s.sendLoop()
+		go s.recvLoop()
+	}
 }
 
 // return net.Conn
