@@ -282,6 +282,14 @@ func NewSyncSession(network, address string, protocol IPacketProtocol, handler P
 
 }
 
+// 开始会话，循环监听发送与接收
+func (s *SyncSession) Start() {
+	if atomic.CompareAndSwapInt32(&s.closed, -1, 0) {
+		go s.sendLoop()
+		go s.recvLoop()
+	}
+}
+
 // AsyncSend queue the packet to the chan of send,
 // if the send channel is full, return ErrSendChanBlocking.
 // if the session had been closed, return ErrSessionClosed
@@ -314,7 +322,6 @@ func (s *SyncSession) recvLoop() {
 		}
 	}
 }
-
 
 // return net.Conn
 func (s *SyncSession) RawConn() net.Conn {
