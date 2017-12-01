@@ -9,6 +9,7 @@ import (
 	"github.com/qd-um/golang-crypto/blowfish"
 	"github.com/klauspost/compress/zlib"
 	gbytes "github.com/datochan/gcom/bytes"
+	"os"
 )
 
 /**
@@ -28,8 +29,20 @@ func EncryptMd5Hex(data []byte) string{
  * param string fileName: 待加密的文件
  * return string
  */
-func EncryptMd5Sum(fileName string){
+func EncryptMd5Sum(fileName string) (string, error){
+	inFile, err := os.OpenFile(fileName, os.O_RDONLY | os.O_RDWR, 0666)
+	if err != nil { return "", err }
 
+	defer inFile.Close()
+
+	md5hash := md5.New()
+	if _, err := io.Copy(md5hash, inFile); err != nil {
+		return "", err
+	}
+
+	strMd5 := fmt.Sprintf("%x", md5hash.Sum(nil)) //将[]byte转成16进制
+
+	return strMd5, nil
 }
 
 func Blowfish(content []byte) []byte {
