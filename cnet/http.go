@@ -14,7 +14,7 @@ import (
  * param string auth: http header Authorization
  * param string data: http header data
  */
-func HttpRequest(url string, ref string, cookie string, auth string, data string) string {
+func HttpRequest(url string, ref string, cookie string, auth string, data string) []byte {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", url, strings.NewReader(data))
@@ -45,5 +45,5 @@ func HttpRequest(url string, ref string, cookie string, auth string, data string
 
 	body, err := ioutil.ReadAll(resp.Body)
 
-	return string(body)
+	return body
 }
