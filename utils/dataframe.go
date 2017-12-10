@@ -26,6 +26,19 @@ func ReIndex(df *dataframe.DataFrame) dataframe.DataFrame {
 }
 
 /**
+ * 从指定记录集中获取某个元素
+ */
+func Element(data dataframe.DataFrame, row int, colname string) series.Element {
+	idx := FindInStringSlice(colname, data.Names())
+
+	if idx < 0 {
+		return nil
+	}
+
+	return data.Elem(row, idx)
+}
+
+/**
  * 从CSV中加载df数据
  */
 func ReadCSV(filename string, options ...dataframe.LoadOption) dataframe.DataFrame {
