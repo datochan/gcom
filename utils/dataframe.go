@@ -4,7 +4,7 @@ import (
 	"os"
 	"github.com/kniren/gota/series"
 	"github.com/kniren/gota/dataframe"
-	"github.com/klauspost/compress/gzip"
+	//"github.com/klauspost/compress/gzip"
 
 	"github.com/datochan/gcom/logger"
 )
@@ -47,11 +47,12 @@ func ReadCSV(filename string, options ...dataframe.LoadOption) dataframe.DataFra
 
 	defer inFile.Close()
 
-	gzipReader, err := gzip.NewReader(inFile)
-	defer gzipReader.Close()
-	if nil != err { return dataframe.DataFrame{Err: err} }
+	// IO操作较频繁，压缩解压缩影响效率
+	//gzipReader, err := gzip.NewReader(inFile)
+	//defer gzipReader.Close()
+	//if nil != err { return dataframe.DataFrame{Err: err} }
 
-	df := dataframe.ReadCSV(gzipReader, options...)
+	df := dataframe.ReadCSV(inFile, options...)
 
 	if nil != df.Err { logger.Error(df.Err.Error()) }
 
@@ -67,9 +68,10 @@ func WriteCSV(filename string, mode int, df *dataframe.DataFrame, option ...data
 	if err != nil { return err }
 	defer outFile.Close()
 
-	gWriter := gzip.NewWriter(outFile)
-	defer gWriter.Close()
+	// IO操作较频繁，压缩解压缩影响效率
+	// gWriter := gzip.NewWriter(outFile)
+	// defer gWriter.Close()
 
-	return df.WriteCSV(gWriter, option...)
+	return df.WriteCSV(outFile, option...)
 }
 
