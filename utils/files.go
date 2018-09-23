@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"strings"
 	"io/ioutil"
+	"os/exec"
+	"path/filepath"
+	"errors"
 )
 
 /**
@@ -18,11 +21,11 @@ func FileExists(path string) (bool, error) {
 }
 
 /**
-	获取指定目录中的文件列表
-	:param file_path: 指定的路径
-	:return: []string, error
-	:notice
-		只遍历文件忽略文件夹
+ 获取指定目录中的文件列表
+ :param file_path: 指定的路径
+ :return: []string, error
+ :notice
+ 只遍历文件忽略文件夹
  */
 func FileListInPath(filePath string) ([]string, error) {
 	var resultList []string
@@ -43,4 +46,26 @@ func FileListInPath(filePath string) ([]string, error) {
 	}
 
 	return resultList, nil
+}
+
+/**
+ * 获取程序所在的文件夹
+ */
+func CurrentPath() (string, error) {
+	file, err := exec.LookPath(os.Args[0])
+	if err != nil {
+		return "", err
+	}
+	path, err := filepath.Abs(file)
+	if err != nil {
+		return "", err
+	}
+	i := strings.LastIndex(path, "/")
+	if i < 0 {
+		i = strings.LastIndex(path, "\\")
+	}
+	if i < 0 {
+		return "", errors.New("error: Can't find \"/\" or \"\\\"")
+	}
+	return string(path[0 : i+1]), nil
 }
