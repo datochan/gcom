@@ -5,19 +5,38 @@ import (
 	"fmt"
 	"strings"
 	"io/ioutil"
-	"os/exec"
 	"path/filepath"
-	"errors"
 )
+
+/**
+ * 获取当前应用程序所在目录
+ */
+func GetExeDir() string {
+	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	return dir + "/"
+}
 
 /**
  * 判断指定文件是否存在
  */
-func FileExists(path string) (bool, error) {
+func IsFileExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil { return true, nil }
 	if os.IsNotExist(err) { return false, nil }
 	return true, err
+}
+
+/**
+ * 判断指定目录是否存在
+ */
+func IsDirExist(path string) bool {
+	fi, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	} else {
+		return fi.IsDir()
+	}
+	return true
 }
 
 /**
@@ -46,26 +65,4 @@ func FileListInPath(filePath string) ([]string, error) {
 	}
 
 	return resultList, nil
-}
-
-/**
- * 获取程序所在的文件夹
- */
-func CurrentPath() (string, error) {
-	file, err := exec.LookPath(os.Args[0])
-	if err != nil {
-		return "", err
-	}
-	path, err := filepath.Abs(file)
-	if err != nil {
-		return "", err
-	}
-	i := strings.LastIndex(path, "/")
-	if i < 0 {
-		i = strings.LastIndex(path, "\\")
-	}
-	if i < 0 {
-		return "", errors.New("error: Can't find \"/\" or \"\\\"")
-	}
-	return string(path[0 : i+1]), nil
 }
